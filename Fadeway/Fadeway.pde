@@ -2,7 +2,7 @@ boolean mainMenu, game, pause, dead;
 Button sButton;
 int mainFade =0, fade=0;
 Player player;
-
+boolean lighting = false;
 boolean keys[] = new boolean[128];
 
 void setup(){
@@ -61,12 +61,29 @@ void update(){
     }
   }
   else if(game){
+    if(fade!=255){
+      fade+=2;
+      if(lighting){
+        if(fade<125)
+          fade+=3;
+        else{
+          fade = 0;
+          lighting = false;
+        }
+      }
+    }
   }
   else if(pause){
   }
   else if(dead){
   }
 }
+
+void lightFlash(){
+  fade = 0;
+  lighting = true;
+}
+
 void checkKeys(){
   
   if(game){
@@ -79,6 +96,16 @@ void checkKeys(){
       player.move(0,-1);
     if(keys['d'])
       player.move(1,0);
+  }
+  else if(pause){
+  }
+}
+void keyTyped(){
+  if(game){
+    if(keys['f']){
+      println("Wow");
+      lightFlash();
+    }
   }
   else if(pause){
   }
