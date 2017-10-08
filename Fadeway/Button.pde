@@ -19,6 +19,5 @@ class Button{
   
   boolean contains(int x, int y){
     return x>pos.x && x<pos.x+dim.x && y>pos.y && y<pos.y+dim.y;
-    
   }
 }

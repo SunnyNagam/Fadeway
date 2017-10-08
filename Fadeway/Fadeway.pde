@@ -2,6 +2,9 @@ boolean mainMenu, game, pause, dead;
 Button sButton;
 int mainFade =0, fade=0;
 Player player;
+ArrayList<Zombie> zom;
+ArrayList<Bullet> bul;
+int round = 0;
 boolean lighting = false;
 boolean keys[] = new boolean[128];
 
@@ -11,6 +14,8 @@ void setup(){
   game = false;
   sButton = new Button(width/2-50,height/2+100,100,40,"START");
   player = new Player(width/2, height/2);
+  zom = new ArrayList<Zombie>();
+  bul = new ArrayList<Bullet>();
   background(255);
   textAlign(CENTER);
 }
@@ -30,7 +35,14 @@ void draw(){
   else if(game){
     fill(255);
     rect(0,0,width,height);
+    
     player.drawPlayer();
+    
+    for(int x=0; x<zom.size(); x++)
+      zom.get(x).drawZombie();
+    for(int x=0; x<bul.size(); x++)
+      bul.get(x).drawBullet();
+    
     fill(0,0,0,fade);
     rect(0,0,width,height);
   }
@@ -54,6 +66,7 @@ void update(){
       else{
         mainMenu=false;
         game = true;
+        startRound();
         mainFade = 0;
         sButton.clicked = false;
       }
@@ -61,6 +74,23 @@ void update(){
     }
   }
   else if(game){
+    // Update Zombies
+    
+    //Ai movement (zombie
+    for(int x=0; x<zom.size(); x++)
+      zom.get(x).runAi(player.pos);
+      
+    //Bullet update
+    for(int x=0; x<bul.size(); x++){
+      bul.get(x).update(bul,zom,player);
+      if(bul.get(x).del){
+        bul.remove(x);
+        x--;
+      }
+    }
+      
+      
+    // Update Lighting
     if(fade!=255){
       fade+=2;
       if(lighting){
@@ -78,7 +108,13 @@ void update(){
   else if(dead){
   }
 }
-
+void startRound(){
+  if(round == 0){
+    zom.clear();
+    zom.add(new Zombie(20,20));
+    zom.add(new Zombie(width-20,height-20));
+  }
+}
 void lightFlash(){
   fade = 0;
   lighting = true;
@@ -116,6 +152,9 @@ void mousePressed(){
       sButton.clicked = true;
     }
     return;
+  }
+  else if(game){
+    player.shoot(bul);
   }
 }
 void keyPressed(){

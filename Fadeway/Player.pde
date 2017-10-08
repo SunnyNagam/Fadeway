@@ -1,12 +1,10 @@
-class Player{
-  PVector pos, dim;
-  int size,speed;
-  color col;
+class Player extends Charecter{
+  double fireRate = 1, lastShot=0;
   Player(int x, int y){
     pos = new PVector(x, y);
     size = 20;
     speed = 5;
-    col =  color(255,255,255);
+    col =  color(0,0,255);
   }
   
   void drawPlayer(){
@@ -20,5 +18,11 @@ class Player{
   void move(PVector v){
     v.normalize();
     pos.add(v.mult(speed));
+  }
+  void shoot(ArrayList<Bullet> bul){
+    if(millis()-lastShot >fireRate*1000){
+      lastShot = millis();
+      bul.add(new Bullet(pos.x, pos.y, mouseX-pos.x,mouseY-pos.y));
+    }
   }
 }
