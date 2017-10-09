@@ -1,6 +1,6 @@
 import ddf.minim.*;
 Minim minim;
-AudioPlayer lightSound, rain;
+AudioPlayer lightSound, rain, simplegun;
 
 boolean mainMenu, game, pause, dead;
 Button sButton;
@@ -15,13 +15,15 @@ int round = 1, score;
 boolean lighting = false, sunMode = false;
 double lightTime = 6, lightTimer=0;
 boolean keys[] = new boolean[128];
-
+PImage grass;
 void setup(){
   size(1400,1000);
   
   minim = new Minim(this);
   lightSound = minim.loadFile("thunder.mp3");
   rain = minim.loadFile("rain.mov");
+  simplegun = minim.loadFile("simplegun.mp3");
+  grass = loadImage("grass.jpg");
   
   mainMenu = true;
   game = false;
@@ -48,6 +50,7 @@ void draw(){
   else if(game){
     fill(255);
     rect(0,0,width,height);
+    //image(grass,0,0,width,height);
     
     player.drawPlayer();
     
@@ -209,7 +212,7 @@ void mousePressed(){
     return;
   }
   else if(game){
-    player.shoot(bul);
+    player.shoot(bul, simplegun);
   }
 }
 void keyPressed(){

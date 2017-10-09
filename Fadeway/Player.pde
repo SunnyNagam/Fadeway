@@ -23,9 +23,11 @@ class Player extends Charecter{
     pos.add(v.mult(speed));
   }
   
-  void shoot(ArrayList<Bullet> bul){
+  void shoot(ArrayList<Bullet> bul, AudioPlayer gunshot){
     if(millis()-lastShot >fireRate*1000){
       lastShot = millis();
+      gunshot.rewind();
+      gunshot.play();
       bul.add(new Bullet(pos.x, pos.y, mouseX-pos.x,mouseY-pos.y));
     }
   }
