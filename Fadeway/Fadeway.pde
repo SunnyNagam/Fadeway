@@ -4,9 +4,9 @@ int mainFade =0, fade=0;
 Player player;
 ArrayList<Zombie> zom;
 ArrayList<Bullet> bul;
-int round = 1;
+int round = 1, score;
 boolean lighting = false;
-int lightTime = 3, lightTimer=0;
+double lightTime = 7, lightTimer=0;
 boolean keys[] = new boolean[128];
 
 void setup(){
@@ -46,6 +46,10 @@ void draw(){
     
     fill(0,0,0,fade);
     rect(0,0,width,height);
+    
+    fill(100,0,200);
+    textSize(20);
+    text(new String("Score: "+score),100,height-20);
   }
   
   else if(pause){
@@ -122,6 +126,10 @@ void update(){
       }
     }
     
+    if(millis()-lightTimer>lightTime*1000){
+      lightTimer = millis();
+      lightFlash();
+    }
     
   }
   else if(pause){
@@ -163,7 +171,7 @@ void checkKeys(){
 }
 void keyTyped(){
   if(game){
-    if(keys['f']){
+    if(keys['f']){    // disable! only for testing
       println("Wow");
       lightFlash();
     }
