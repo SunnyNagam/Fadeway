@@ -6,7 +6,7 @@ ArrayList<Zombie> zom;
 ArrayList<Bullet> bul;
 int round = 1, score;
 boolean lighting = false;
-double lightTime = 7, lightTimer=0;
+double lightTime = 5, lightTimer=0;
 boolean keys[] = new boolean[128];
 
 void setup(){

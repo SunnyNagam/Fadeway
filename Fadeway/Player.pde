@@ -14,11 +14,15 @@ class Player extends Charecter{
   
   void move(int x, int y){
     pos.add(speed*x,-speed*y);
+    if(pos.x<0 || pos.x>width || pos.y<0 || pos.y>height)
+      pos.sub(speed*x,-speed*y);
   }
+  
   void move(PVector v){
     v.normalize();
     pos.add(v.mult(speed));
   }
+  
   void shoot(ArrayList<Bullet> bul){
     if(millis()-lastShot >fireRate*1000){
       lastShot = millis();
