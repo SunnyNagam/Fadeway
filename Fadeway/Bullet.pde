@@ -6,7 +6,7 @@ class Bullet{
   
   Bullet(float x, float y, float dx, float dy){
     pos = new PVector(x, y);
-    size = 5;
+    size = 10;
     speed = 10;
     dir = new PVector(dx,dy);
     dir.normalize().mult(speed);

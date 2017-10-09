@@ -3,7 +3,7 @@ class Player extends Charecter{
   Player(int x, int y){
     pos = new PVector(x, y);
     size = 30;
-    speed = 4;
+    speed = 4.1;
     col =  color(0,0,255);
   }
   

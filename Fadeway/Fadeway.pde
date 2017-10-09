@@ -13,7 +13,7 @@ ArrayList<Bullet> bul;
 
 int round = 1, score;
 boolean lighting = false, sunMode = false;
-double lightTime = 6, lightTimer=0;
+double lightTime = 5, lightTimer=0;
 boolean keys[] = new boolean[128];
 PImage grass,zomImg,playerImg;
 void setup(){
@@ -78,7 +78,7 @@ void draw(){
     }
     
     //HUD STUFF
-    fill(100,0,200);
+    fill(255,255,255);
     textSize(20);
     text(new String("Score: "+score),100,height-20);
     text(new String("Round: "+round),600,height-20);
@@ -232,7 +232,7 @@ void lightFlash(){
 
 void checkKeys(){
   
-  if(game){
+  if(game && !dead){
     if(keys['w'])
       player.move(0,1);
     if(keys['a'])
@@ -249,6 +249,8 @@ void keyTyped(){
   if(game){
     if(keys['f']){    // disable! only for testing
       sunMode = !sunMode;
+      round = 30;
+      startRound();
     }
   }
   else if(pause){

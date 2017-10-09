@@ -3,7 +3,7 @@ class Zombie extends Charecter{
   Zombie(int x, int y){
     pos = new PVector(x, y);
     size = 30;
-    speed = 3.5;
+    speed = 4;
     col =  color(255,40,40);
   }
   
