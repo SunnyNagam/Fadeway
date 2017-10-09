@@ -7,9 +7,16 @@ class Player extends Charecter{
     col =  color(0,0,255);
   }
   
-  void drawPlayer(){
-    fill(col);
-    ellipse(pos.x,pos.y,size,size);
+  void drawPlayer(PImage img){
+    //fill(col);
+    //ellipse(pos.x,pos.y,size,size);
+    pushMatrix();
+    translate(pos.x,pos.y);
+    float ang = PVector.angleBetween(new PVector(mouseX,mouseY).copy().sub(pos),imgUnit);
+    if(mouseY<pos.y) ang*=-1;
+    rotate(ang);
+    image(img,-30,0-30);
+    popMatrix();
   }
   
   void move(int x, int y){

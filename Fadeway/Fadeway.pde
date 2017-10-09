@@ -15,7 +15,7 @@ int round = 1, score;
 boolean lighting = false, sunMode = false;
 double lightTime = 6, lightTimer=0;
 boolean keys[] = new boolean[128];
-PImage grass;
+PImage grass,zomImg,playerImg;
 void setup(){
   size(1400,1000);
   
@@ -25,6 +25,10 @@ void setup(){
   simplegun = minim.loadFile("simplegun.mp3");
   grass = loadImage("grass.jpg");
   grass.resize(1400,0);
+  zomImg = loadImage("zombie.png");
+  playerImg = loadImage("player.png");
+  zomImg.resize(60,60);
+  playerImg.resize(60,60);
   
   loadGame();
 }
@@ -61,10 +65,10 @@ void draw(){
     rect(0,0,width,height);
     image(grass,0,0);
     
-    player.drawPlayer();
+    player.drawPlayer(playerImg);
     
     for(int x=0; x<zom.size(); x++)
-      zom.get(x).drawZombie();
+      zom.get(x).drawZombie(zomImg,player.pos);
     for(int x=0; x<bul.size(); x++)
       bul.get(x).drawBullet();
     

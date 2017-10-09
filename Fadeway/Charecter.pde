@@ -1,5 +1,5 @@
 class Charecter{
-  PVector pos, dim;
+  PVector pos, dim, imgUnit = new PVector(1,0);
   float speed;
   int size;
   boolean dead = false;
