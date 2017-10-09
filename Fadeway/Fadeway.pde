@@ -25,6 +25,9 @@ void setup(){
   simplegun = minim.loadFile("simplegun.mp3");
   grass = loadImage("grass.jpg");
   
+  round =1;
+  lightTimer = millis();
+  mainFade =0;
   mainMenu = true;
   game = false;
   sButton = new Button(width/2-50,height/2+100,100,40,"START");
@@ -106,8 +109,16 @@ void update(){
     // Update Zombies
     
     //Ai movement (zombie)
-    for(int x=0; x<zom.size(); x++)
+    for(int x=0; x<zom.size(); x++){
       zom.get(x).runAi(player.pos, zom);
+      if(player.checkColl(zom.get(x))){
+        player.dead = true;
+        
+        game = false;
+        dead = true;
+        setup();
+      }
+    }
       
     //Bullet update
     for(int x=0; x<bul.size(); x++){
