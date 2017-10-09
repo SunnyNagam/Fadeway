@@ -9,8 +9,10 @@ class Charecter{
     
     double dist = pos.copy().sub(b.pos).magSq();
     
-    if(dist < (rad+b.size/2)*(rad+b.size/2))
+    if(dist < (rad+b.size/2)*(rad+b.size/2)){
+      dead = true;
       return true;
+    }
     
     return false;
     

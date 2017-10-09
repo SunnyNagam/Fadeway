@@ -4,8 +4,9 @@ int mainFade =0, fade=0;
 Player player;
 ArrayList<Zombie> zom;
 ArrayList<Bullet> bul;
-int round = 0;
+int round = 1;
 boolean lighting = false;
+int lightTime = 3, lightTimer=0;
 boolean keys[] = new boolean[128];
 
 void setup(){
@@ -76,7 +77,7 @@ void update(){
   else if(game){
     // Update Zombies
     
-    //Ai movement (zombie
+    //Ai movement (zombie)
     for(int x=0; x<zom.size(); x++)
       zom.get(x).runAi(player.pos);
       
@@ -86,10 +87,28 @@ void update(){
       if(bul.get(x).del){
         bul.remove(x);
         x--;
+        continue;
+      }
+      for(int y=0; y<zom.size(); y++){
+        zom.get(y).checkColl(bul.get(x));
+        if(zom.get(y).dead){
+          zom.remove(y);
+          y--;
+          bul.remove(x);
+          x--;
+          break;
+        }
       }
     }
       
-      
+    //ROUND CLEAR
+    if(zom.size()==0){
+      round++;
+      //put up a message or soemthing TODO
+      lightFlash();
+      startRound();
+    }
+    
     // Update Lighting
     if(fade!=255){
       fade+=2;
@@ -102,6 +121,8 @@ void update(){
         }
       }
     }
+    
+    
   }
   else if(pause){
   }
@@ -109,10 +130,14 @@ void update(){
   }
 }
 void startRound(){
-  if(round == 0){
-    zom.clear();
-    zom.add(new Zombie(20,20));
-    zom.add(new Zombie(width-20,height-20));
+  zom.clear();
+  for(int x=0; x<round*3; x++){
+    if(random(1)<0.5){  //top or bott
+      zom.add(new Zombie((int)random(width),(random(1)<0.5?-20:height+20)));
+    }
+    else{
+      zom.add(new Zombie((random(1)<0.5?-20:width+20),(int)random(height)));
+    }
   }
 }
 void lightFlash(){
