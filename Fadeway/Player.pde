@@ -1,9 +1,9 @@
 class Player extends Charecter{
-  double fireRate = 1, lastShot=0;
+  double fireRate = 0.6, lastShot=0;
   Player(int x, int y){
     pos = new PVector(x, y);
-    size = 20;
-    speed = 5;
+    size = 30;
+    speed = 4;
     col =  color(0,0,255);
   }
   

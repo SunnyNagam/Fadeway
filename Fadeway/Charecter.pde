@@ -1,6 +1,7 @@
 class Charecter{
   PVector pos, dim;
-  int size,speed;
+  float speed;
+  int size;
   boolean dead = false;
   color col;
   
@@ -11,6 +12,19 @@ class Charecter{
     
     if(dist < (rad+b.size/2)*(rad+b.size/2)){
       dead = true;
+      return true;
+    }
+    
+    return false;
+    
+  }
+  
+  boolean checkColl(Charecter c){
+    double rad = size/2;
+    
+    double dist = pos.copy().sub(c.pos).magSq();
+    
+    if(dist < (rad+c.size/2)*(rad+c.size/2)){
       return true;
     }
     

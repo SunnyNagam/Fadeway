@@ -1,16 +1,28 @@
+import ddf.minim.*;
+Minim minim;
+AudioPlayer lightSound, rain;
+
 boolean mainMenu, game, pause, dead;
 Button sButton;
+
 int mainFade =0, fade=0;
 Player player;
+
 ArrayList<Zombie> zom;
 ArrayList<Bullet> bul;
+
 int round = 1, score;
-boolean lighting = false;
-double lightTime = 5, lightTimer=0;
+boolean lighting = false, sunMode = false;
+double lightTime = 6, lightTimer=0;
 boolean keys[] = new boolean[128];
 
 void setup(){
   size(1400,1000);
+  
+  minim = new Minim(this);
+  lightSound = minim.loadFile("thunder.mp3");
+  rain = minim.loadFile("rain.mov");
+  
   mainMenu = true;
   game = false;
   sButton = new Button(width/2-50,height/2+100,100,40,"START");
@@ -45,12 +57,14 @@ void draw(){
       bul.get(x).drawBullet();
     
     fill(0,0,0,fade);
-    rect(0,0,width,height);
+    if(!sunMode)
+      rect(0,0,width,height);
     
     //HUD STUFF
     fill(100,0,200);
     textSize(20);
     text(new String("Score: "+score),100,height-20);
+    text(new String("Round: "+round),600,height-20);
   }
   
   else if(pause){
@@ -72,6 +86,8 @@ void update(){
       else{
         mainMenu=false;
         game = true;
+        rain.loop();
+        rain.play();
         startRound();
         mainFade = 0;
         sButton.clicked = false;
@@ -80,11 +96,15 @@ void update(){
     }
   }
   else if(game){
+    if(!rain.isPlaying()){
+      rain.rewind();
+      rain.play();
+    }
     // Update Zombies
     
     //Ai movement (zombie)
     for(int x=0; x<zom.size(); x++)
-      zom.get(x).runAi(player.pos);
+      zom.get(x).runAi(player.pos, zom);
       
     //Bullet update
     for(int x=0; x<bul.size(); x++){
@@ -129,7 +149,6 @@ void update(){
     }
     
     if(millis()-lightTimer>lightTime*1000){
-      lightTimer = millis();
       lightFlash();
     }
     
@@ -152,13 +171,15 @@ void startRound(){
 }
 void lightFlash(){
   fade = 0;
+  lightTimer = millis();
   lighting = true;
+  lightSound.rewind();
+  lightSound.play();
 }
 
 void checkKeys(){
   
   if(game){
-    //kprintln("yo "+keys['a']+", "+keys['d']+", "+(char)key);
     if(keys['w'])
       player.move(0,1);
     if(keys['a'])
@@ -174,8 +195,7 @@ void checkKeys(){
 void keyTyped(){
   if(game){
     if(keys['f']){    // disable! only for testing
-      println("Wow");
-      lightFlash();
+      sunMode = !sunMode;
     }
   }
   else if(pause){
