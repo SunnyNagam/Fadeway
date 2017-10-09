@@ -24,8 +24,14 @@ void setup(){
   rain = minim.loadFile("rain.mov");
   simplegun = minim.loadFile("simplegun.mp3");
   grass = loadImage("grass.jpg");
+  grass.resize(1400,0);
   
+  loadGame();
+}
+
+void loadGame(){
   round =1;
+  score = 0;
   lightTimer = millis();
   mainFade =0;
   mainMenu = true;
@@ -50,10 +56,10 @@ void draw(){
     rect(0,0,width,height);
   }
   
-  else if(game){
+  else if(game || dead){
     fill(255);
     rect(0,0,width,height);
-    //image(grass,0,0,width,height);
+    image(grass,0,0);
     
     player.drawPlayer();
     
@@ -62,9 +68,10 @@ void draw(){
     for(int x=0; x<bul.size(); x++)
       bul.get(x).drawBullet();
     
-    fill(0,0,0,fade);
-    if(!sunMode)
+    if(!sunMode && !dead){
+      fill(0,0,0,fade);
       rect(0,0,width,height);
+    }
     
     //HUD STUFF
     fill(100,0,200);
@@ -76,7 +83,15 @@ void draw(){
   else if(pause){
   }
   
-  else if(dead){
+  if(dead){
+    
+    fill(0);
+    textSize(40);
+    textAlign(CENTER);
+    text("FADEWAY",width/2, height/6);
+    text("FINAL SCORE: "+score+" (Round "+round+")",width/2, height/4);
+    sButton.drawButton();
+    
   }
 }
 void update(){
@@ -92,13 +107,39 @@ void update(){
       else{
         mainMenu=false;
         game = true;
-        rain.loop();
+        rain.rewind();
         rain.play();
         startRound();
         mainFade = 0;
         sButton.clicked = false;
       }
       
+    }
+  }
+  else if(dead){
+    if(sButton.clicked){
+        dead = false;
+        loadGame();
+        mainMenu=false;
+        game = true;
+        startRound();
+        fade = 0;
+        sButton.clicked = false;
+      
+    }
+    
+    if(!rain.isPlaying()){
+      rain.rewind();
+      rain.play();
+    }
+    // Update Zombies
+    
+    //Ai movement (zombie)
+    for(int x=0; x<zom.size(); x++){
+      zom.get(x).runAi(player.pos, zom);
+      if(player.checkColl(zom.get(x))){
+        dead = true;
+      }
     }
   }
   else if(game){
@@ -112,11 +153,7 @@ void update(){
     for(int x=0; x<zom.size(); x++){
       zom.get(x).runAi(player.pos, zom);
       if(player.checkColl(zom.get(x))){
-        player.dead = true;
-        
-        game = false;
         dead = true;
-        setup();
       }
     }
       
@@ -169,8 +206,6 @@ void update(){
   }
   else if(pause){
   }
-  else if(dead){
-  }
 }
 void startRound(){
   zom.clear();
@@ -220,7 +255,11 @@ void mousePressed(){
     if(sButton.contains(mouseX,mouseY)){
       sButton.clicked = true;
     }
-    return;
+  }
+  else if(dead){
+    if(sButton.contains(mouseX,mouseY)){
+      sButton.clicked = true;
+    }
   }
   else if(game){
     player.shoot(bul, simplegun);
