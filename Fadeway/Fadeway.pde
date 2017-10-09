@@ -47,6 +47,7 @@ void draw(){
     fill(0,0,0,fade);
     rect(0,0,width,height);
     
+    //HUD STUFF
     fill(100,0,200);
     textSize(20);
     text(new String("Score: "+score),100,height-20);
@@ -96,6 +97,7 @@ void update(){
       for(int y=0; y<zom.size(); y++){
         zom.get(y).checkColl(bul.get(x));
         if(zom.get(y).dead){
+          score++;
           zom.remove(y);
           y--;
           bul.remove(x);
