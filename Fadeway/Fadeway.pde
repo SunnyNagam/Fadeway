@@ -10,10 +10,12 @@ Player player;
 
 ArrayList<Zombie> zom;
 ArrayList<Bullet> bul;
+ArrayList<Item> item;
 
 int round = 1, score;
-boolean lighting = false, sunMode = false;
+boolean lighting = false, sunMode = false, itemActive=false;
 double lightTime = 5, lightTimer=0;
+double itemChance = 0.99, itemTimer;
 boolean keys[] = new boolean[128];
 PImage grass,zomImg,playerImg;
 void setup(){
@@ -34,6 +36,8 @@ void setup(){
 }
 
 void loadGame(){
+  itemActive = false;
+  itemTimer = millis();
   round =1;
   score = 0;
   lightTimer = millis();
@@ -44,6 +48,7 @@ void loadGame(){
   player = new Player(width/2, height/2);
   zom = new ArrayList<Zombie>();
   bul = new ArrayList<Bullet>();
+  item = new ArrayList<Item>();
   background(255);
   textAlign(CENTER);
 }
@@ -71,6 +76,8 @@ void draw(){
       zom.get(x).drawZombie(zomImg,player.pos);
     for(int x=0; x<bul.size(); x++)
       bul.get(x).drawBullet();
+    for(int x=0; x<item.size(); x++)
+      item.get(x).drawItem();
     
     if(!sunMode && !dead){
       fill(0,0,0,fade);
@@ -89,7 +96,7 @@ void draw(){
   
   if(dead){
     
-    fill(0);
+    fill(255);
     textSize(40);
     textAlign(CENTER);
     text("FADEWAY",width/2, height/6);
@@ -141,12 +148,14 @@ void update(){
     //Ai movement (zombie)
     for(int x=0; x<zom.size(); x++){
       zom.get(x).runAi(player.pos, zom);
-      if(player.checkColl(zom.get(x))){
-        dead = true;
-      }
     }
   }
   else if(game){
+    
+    if(mousePressed){
+    player.shoot(bul, simplegun);
+    }
+  
     if(!rain.isPlaying()){
       rain.rewind();
       rain.play();
@@ -160,7 +169,24 @@ void update(){
         dead = true;
       }
     }
-      
+    if(itemActive && millis() - itemTimer >= 5000){
+      itemActive = false;
+      player.fireRate *=5;
+    }
+    // item update
+    for(int x=0; x<item.size(); x++){
+      if(player.checkColl(item.get(x))){
+        item.remove(x);
+        x--;
+        if(!itemActive){
+          itemActive = true;
+          // ITEM DOES THINGS HERE
+          player.fireRate /= 5;
+        }
+        itemTimer = millis();
+      }
+    }
+    
     //Bullet update
     for(int x=0; x<bul.size(); x++){
       bul.get(x).update(bul,zom,player);
@@ -185,6 +211,7 @@ void update(){
     //ROUND CLEAR
     if(zom.size()==0){
       round++;
+      player.fireRate*=0.9;
       //put up a message or soemthing TODO
       lightFlash();
       startRound();
@@ -220,6 +247,9 @@ void startRound(){
     else{
       zom.add(new Zombie((random(1)<0.5?-20:width+20),(int)random(height)));
     }
+  }
+  if(random(1)<itemChance){
+    item.add(new Item((int)random(0,width),(int)random(0,height)));
   }
 }
 void lightFlash(){
@@ -266,9 +296,6 @@ void mousePressed(){
     if(sButton.contains(mouseX,mouseY)){
       sButton.clicked = true;
     }
-  }
-  else if(game){
-    player.shoot(bul, simplegun);
   }
 }
 void keyPressed(){
