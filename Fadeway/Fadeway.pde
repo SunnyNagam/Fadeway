@@ -15,7 +15,7 @@ ArrayList<Item> item;
 int round = 1, score;
 boolean lighting = false, sunMode = false, itemActive=false;
 double lightTime = 5, lightTimer=0;
-double itemChance = 0.99, itemTimer;
+double itemChance = 0.6, itemTimer;
 boolean keys[] = new boolean[128];
 PImage grass,zomImg,playerImg;
 void setup(){
@@ -56,10 +56,16 @@ void loadGame(){
 void draw(){
   update();
   if(mainMenu){
-    fill(0);
-    textSize(40);
+    image(grass,0,0);
+    fill(255);
+    textSize(60);
     textAlign(CENTER);
-    text("FADEWAY",width/2, height/2);
+    text("FADEWAY",width/2, height/4);
+    textSize(30);
+    text("DEFEND AGAINST THE WAVES OF ZOMBIES!",width/2, height/3+50);
+    text("You can only see when there's lighting, so remember where ",width/2, height/3+100);
+    text("the zombies and powerups are if you don't wanna die in the dark!",width/2,height/3+130);
+    text("MOVE: W-A-S-D              SHOOT: CLICK",width/2, height/3+200);
     sButton.drawButton();
     fill(0,0,0,mainFade);
     rect(0,0,width,height);
@@ -219,10 +225,10 @@ void update(){
     
     // Update Lighting
     if(fade!=255){
-      fade+=2;
+      fade+=3.5;
       if(lighting){
         if(fade<125)
-          fade+=3;
+          fade+=5;
         else{
           fade = 0;
           lighting = false;
@@ -278,9 +284,9 @@ void checkKeys(){
 void keyTyped(){
   if(game){
     if(keys['f']){    // disable! only for testing
-      sunMode = !sunMode;
-      round = 30;
-      startRound();
+    //  sunMode = !sunMode;
+     // round = 30;
+     // startRound();
     }
   }
   else if(pause){
