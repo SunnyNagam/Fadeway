@@ -7,6 +7,7 @@ Button sButton;
 
 int mainFade =0, fade=0;
 Player player;
+int laksdjf = 2;
 
 ArrayList<Zombie> zom;
 ArrayList<Bullet> bul;
